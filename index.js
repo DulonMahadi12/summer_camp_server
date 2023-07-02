@@ -1,9 +1,10 @@
 require('dotenv').config();
-var express = require('express');
-var cors = require('cors');
+const express = require('express');
+const cors = require('cors');
 const { MongoClient, ServerApiVersion } = require('mongodb');
+const jwt = require('jsonwebtoken');
 
-var app = express();
+const app = express();
 
 app.use(cors());
 app.use(express.json());
@@ -20,6 +21,32 @@ const client = new MongoClient(uri, {
   },
 });
 
+// jwt authenticate middleware function:
+const verifyJWT = (req, res, next) => {
+  const authorization = req?.headers?.authorization;
+  // console.log(authorization);
+  // console.log('------------');
+
+  if (!authorization) {
+    return res
+      .status(400)
+      .send({ error: true, message: 'authorization fails!' });
+  }
+  // bearer token:
+  const token = authorization.split(' ')[1];
+  // console.log(token);
+
+  jwt.verify(token, process.env.ACCESS_TOKEN_CLIENT_SECRET, (err, decoded) => {
+    if (err) {
+      return res
+        .status(400)
+        .send({ error: true, message: 'authorization fails!' });
+    }
+    req.decoded = decoded;
+    next();
+  });
+};
+
 let connection;
 // function read or write to database
 async function run() {
@@ -29,12 +56,25 @@ async function run() {
     connection = await client.connect();
     //
     //
+    // jwt authentication create access token:
+    app.post('/jwt', async (req, res) => {
+      const userEmail = await req?.body;
+      const token = jwt.sign(
+        userEmail,
+        process.env.ACCESS_TOKEN_CLIENT_SECRET,
+        { expiresIn: '3h' }
+      );
+      // console.log(token);
+      res.send({ token });
+    });
+    //
+    //
     // create collection
     const cartCollection = client.db('clientCard').collection('cart');
     //
     //
     // one operation
-    app.get('/cart', async (req, res) => {
+    app.get('/cart', verifyJWT, async (req, res) => {
       const result = await cartCollection.find({}).toArray();
       res.send(result);
     });
