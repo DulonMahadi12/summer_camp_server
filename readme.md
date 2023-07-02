@@ -4,6 +4,10 @@
 
 ### 1: mongoDB connection successfully.
 
+### 2: simple JWT authentication.
+
+### 3: store user information in mongoDB database.
+
 # ---------Third Party Package---------
 
 ##### express

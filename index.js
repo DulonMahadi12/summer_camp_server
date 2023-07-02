@@ -56,28 +56,34 @@ async function run() {
     connection = await client.connect();
     //
     //
+    // create collection
+    const userCollection = client.db('summer_camp').collection('allUser');
+    //
     // jwt authentication create access token:
     app.post('/jwt', async (req, res) => {
       const userEmail = await req?.body;
       const token = jwt.sign(
         userEmail,
         process.env.ACCESS_TOKEN_CLIENT_SECRET,
-        { expiresIn: '3h' }
+        { expiresIn: '2h' }
       );
       // console.log(token);
       res.send({ token });
     });
     //
-    //
-    // create collection
-    const cartCollection = client.db('clientCard').collection('cart');
-    //
-    //
-    // one operation
-    app.get('/cart', verifyJWT, async (req, res) => {
-      const result = await cartCollection.find({}).toArray();
-      res.send(result);
+    //post all user information after user exist
+    app.post('/alluser', async (req, res) => {
+      const userMatched = await req?.body?.email;
+      const findUser = await userCollection.findOne({ email: userMatched });
+      if (findUser) {
+        res.status(406).send({ message: 'user not acceptable, already exist' });
+      } else {
+        const data = await req?.body;
+        const result = await userCollection.insertOne(data);
+        res.send(result);
+      }
     });
+    //
     //
     //
     // Send a ping to confirm a successful connection
