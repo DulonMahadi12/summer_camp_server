@@ -12,6 +12,8 @@
 
 ### 5: data body catch by frontend and store in mongodb.
 
+### 5: get instructor courses that he add his own courses and response send to client site.
+
 # ---------Third Party Package---------
 
 ##### express

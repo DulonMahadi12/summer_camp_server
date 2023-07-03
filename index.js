@@ -106,9 +106,20 @@ async function run() {
     });
     //
     //add post req to post any course by instructor:
-    app.post('/postcourse', verifyJWT, async (req, res) => {
+    app.post('/rawcourse', verifyJWT, async (req, res) => {
       const data = await req?.body;
       const result = await rawCoursesCollection.insertOne(data);
+      console.log(result);
+
+      res.send(result);
+    });
+    //
+    //get all courses that add by instructor:
+    app.get('/rawcourse', verifyJWT, async (req, res) => {
+      const userEmail = req?.query?.email;
+
+      const query = { instructor_email: userEmail };
+      const result = await rawCoursesCollection.find(query).toArray();
       console.log(result);
 
       res.send(result);
