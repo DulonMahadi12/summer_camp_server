@@ -58,6 +58,9 @@ async function run() {
     //
     // create collection
     const userCollection = client.db('summer_camp').collection('allUser');
+    const rawCoursesCollection = client
+      .db('summer_camp')
+      .collection('raw_courses');
     //
     // jwt authentication create access token:
     app.post('/jwt', async (req, res) => {
@@ -102,6 +105,14 @@ async function run() {
       res.send(result);
     });
     //
+    //add post req to post any course by instructor:
+    app.post('/postcourse', verifyJWT, async (req, res) => {
+      const data = await req?.body;
+      const result = await rawCoursesCollection.insertOne(data);
+      console.log(result);
+
+      res.send(result);
+    });
     // Send a ping to confirm a successful connection
     await client.db('admin').command({ ping: 1 });
     console.log(
