@@ -84,7 +84,23 @@ async function run() {
       }
     });
     //
-    //
+    //get single user:
+    app.get('/alluser', verifyJWT, async (req, res) => {
+      const userEmail = req?.query?.email;
+      const decodedEmail = await req?.decoded?.email;
+
+      if (userEmail !== decodedEmail) {
+        return res
+          .status(400)
+          .send({ error: true, message: 'authorization fails!' });
+      }
+
+      const query = { email: userEmail };
+
+      const result = await userCollection.findOne(query);
+      // console.log(result);
+      res.send(result);
+    });
     //
     // Send a ping to confirm a successful connection
     await client.db('admin').command({ ping: 1 });
