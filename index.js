@@ -120,8 +120,31 @@ async function run() {
 
       const query = { instructor_email: userEmail };
       const result = await rawCoursesCollection.find(query).toArray();
-      console.log(result);
+      // console.log(result);
 
+      res.send(result);
+    });
+    //
+    //verify that admin is admin:
+    const verifyAdmin = async (req, res, next) => {
+      const userEmail = await req?.query?.email;
+      const query = { email: userEmail };
+
+      const findUser = await userCollection.findOne(query);
+
+      if (findUser?.user_role !== 'admin') {
+        return res
+          .status(401)
+          .send({ error: true, message: 'notfound, user is not an admin!' });
+      } else {
+        next();
+      }
+    };
+    //
+    //admin get all users:
+    app.get('/manageUser', verifyJWT, verifyAdmin, async (req, res) => {
+      const result = await userCollection.find({}).toArray();
+      // console.log(result);
       res.send(result);
     });
     // Send a ping to confirm a successful connection

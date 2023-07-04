@@ -12,7 +12,9 @@
 
 ### 5: data body catch by frontend and store in mongodb.
 
-### 5: get instructor courses that he add his own courses and response send to client site.
+### 6: get instructor courses that he add his own courses and response send to client site.
+
+### 7: first checkup that user is legal and then check user role is admin after that get all users data and send to the client.
 
 # ---------Third Party Package---------
 
