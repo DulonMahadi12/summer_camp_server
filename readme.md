@@ -16,6 +16,8 @@
 
 ### 7: first checkup that user is legal and then check user role is admin after that get all users data and send to the client.
 
+### 8: admin get the all raw courses.
+
 # ---------Third Party Package---------
 
 ##### express

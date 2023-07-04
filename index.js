@@ -153,6 +153,19 @@ async function run() {
       'Pinged your deployment. You successfully connected to MongoDB!'
     );
     //
+    //
+    //admin manage course all users:
+    app.get('/managecourse', verifyJWT, verifyAdmin, async (req, res) => {
+      const result = await rawCoursesCollection.find({}).toArray();
+      // console.log(result);
+      res.send(result);
+    });
+    // Send a ping to confirm a successful connection
+    await client.db('admin').command({ ping: 1 });
+    console.log(
+      'Pinged your deployment. You successfully connected to MongoDB!'
+    );
+    //
   } finally {
     // Ensures that the client will close when you finish/error
     // connection = await client.close();
