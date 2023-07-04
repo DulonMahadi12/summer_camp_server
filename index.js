@@ -77,7 +77,8 @@ async function run() {
     //post all user information after user exist
     app.post('/alluser', async (req, res) => {
       const userMatched = await req?.body?.email;
-      const findUser = await userCollection.findOne({ email: userMatched });
+      const query = { email: userMatched };
+      const findUser = await userCollection.findOne(query);
       if (findUser) {
         res.status(406).send({ message: 'user not acceptable, already exist' });
       } else {
