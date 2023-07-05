@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const jwt = require('jsonwebtoken');
 
 const app = express();
@@ -166,6 +166,25 @@ async function run() {
     console.log(
       'Pinged your deployment. You successfully connected to MongoDB!'
     );
+    //
+    //course approved by admin
+    app.patch('/course-approved/:status', verifyJWT, async (req, res) => {
+      const id = req?.query?.id;
+      const status = req?.params?.status;
+      // console.log(id, status);
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updates = {
+        $set: { course_status: status },
+      };
+      const result = await rawCoursesCollection.updateOne(
+        filter,
+        updates,
+        options
+      );
+      res.send(result).status(200);
+    });
+    //
     //
   } finally {
     // Ensures that the client will close when you finish/error
