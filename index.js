@@ -21,6 +21,10 @@ const client = new MongoClient(uri, {
   },
 });
 
+app.get('/', (req, res) => {
+  res.send('Summer-Camp-Server: Running...');
+});
+
 // jwt authenticate middleware function:
 const verifyJWT = (req, res, next) => {
   const authorization = req?.headers?.authorization;
@@ -187,14 +191,14 @@ async function run() {
 
     //
     //get request for find course data which is approved by admin:
-    app.get('/courses', verifyJWT, async (req, res) => {
+    app.get('/courses', async (req, res) => {
       const query = { course_status: 'approved' };
       const result = await rawCoursesCollection.find(query).toArray();
       res.send(result);
     });
     //
     //get request for find course data which is approved by admin:
-    app.get('/instructors', verifyJWT, async (req, res) => {
+    app.get('/instructors', async (req, res) => {
       const result = await userCollection.find({}).toArray();
       res.send(result);
     });
