@@ -184,6 +184,32 @@ async function run() {
       );
       res.send(result).status(200);
     });
+
+    //
+    //get request for find course data which is approved by admin:
+    app.get('/courses', verifyJWT, async (req, res) => {
+      const query = { course_status: 'approved' };
+      const result = await rawCoursesCollection.find(query).toArray();
+      res.send(result);
+    });
+    //
+    //get request for find course data which is approved by admin:
+    app.get('/instructors', verifyJWT, async (req, res) => {
+      const result = await userCollection.find({}).toArray();
+      res.send(result);
+    });
+    //
+    //
+    //get request for find single course data which is approved by admin:
+    app.get('/course/details:id', async (req, res) => {
+      const courseId = req?.params?.id;
+
+      const query = { _id: new ObjectId(courseId) };
+      const result = await rawCoursesCollection.findOne(query);
+      // console.log(result);
+
+      res.send(result).status(200);
+    });
     //
     //
   } finally {

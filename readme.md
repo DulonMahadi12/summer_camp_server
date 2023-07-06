@@ -20,6 +20,8 @@
 
 ### 9. admin course approved or denay patch req handaled'
 
+### 10. get req to get all aproved data to database and send to the frontend.
+
 # ---------Third Party Package---------
 
 ##### express
