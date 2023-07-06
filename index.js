@@ -65,6 +65,7 @@ async function run() {
     const rawCoursesCollection = client
       .db('summer_camp')
       .collection('raw_courses');
+    const cartCollection = client.db('summer_camp').collection('userCart');
     //
     // jwt authentication create access token:
     app.post('/jwt', async (req, res) => {
@@ -212,6 +213,23 @@ async function run() {
       const result = await rawCoursesCollection.findOne(query);
       // console.log(result);
 
+      res.send(result).status(200);
+    });
+    //
+    //
+    //add user cart item in mongo db:
+    app.post('/addcart', verifyJWT, async (req, res) => {
+      const data = await req?.body;
+
+      const result = await cartCollection.insertOne(data);
+      res.send(result).status(200);
+    });
+    //
+    //
+    //add user cart item in mongo db:
+    app.get('/cart', verifyJWT, async (req, res) => {
+      const queryEmail = req?.query?.email;
+      const result = await cartCollection.find({ email: queryEmail }).toArray();
       res.send(result).status(200);
     });
     //
